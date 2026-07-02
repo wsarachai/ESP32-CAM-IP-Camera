@@ -7,6 +7,9 @@
 .vscode/launch.json
 .vscode/ipch/
 
+# Python virtual environment
+.venv/
+
 # Secrets — real WiFi credentials & static IP live here. NEVER commit.
 include/secrets.h
 
