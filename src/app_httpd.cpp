@@ -161,7 +161,7 @@ static esp_err_t stream_handler(httpd_req_t *req) {
   httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
   httpd_resp_set_hdr(req, "X-Framerate", "60");
 
-  char part_buf[64];
+  char part_buf[128];  // must fit the full header incl. 10-digit epoch + usec
   while (true) {
     camera_fb_t *fb = esp_camera_fb_get();
     if (!fb) { res = ESP_FAIL; break; }
