@@ -36,12 +36,15 @@ static void initCamera() {
   config.pin_sccb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn     = PWDN_GPIO_NUM;
   config.pin_reset    = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 20000000;
-  config.frame_size   = FRAMESIZE_SVGA;      // 800x600 boot default
-  config.pixel_format = PIXFORMAT_JPEG;      // streaming
-  config.grab_mode    = CAMERA_GRAB_LATEST;  // lowest latency for live viewing
+  // 10 MHz (vs the usual 20) gives the DMA capture path maximum margin against
+  // dropped bytes, which show up as random colored horizontal lines. This is an
+  // AI feed — FPS is irrelevant, clean frames are everything.
+  config.xclk_freq_hz = 10000000;
+  config.frame_size   = FRAMESIZE_UXGA;         // 1600x1200 — max detail for AI
+  config.pixel_format = PIXFORMAT_JPEG;         // streaming
+  config.grab_mode    = CAMERA_GRAB_WHEN_EMPTY; // only complete, in-order frames
   config.fb_location  = CAMERA_FB_IN_PSRAM;
-  config.jpeg_quality = 12;                  // lower = better quality / bigger
+  config.jpeg_quality = 12;                  // lower = better quality / bigger; 12 is the safe floor at UXGA
   config.fb_count     = 2;                   // double buffer (needs PSRAM)
 
   if (!psramFound()) {
@@ -100,7 +103,12 @@ static void connectWiFi() {
       ESP.restart();
     }
   }
-  Serial.printf("\n[wifi] connected, IP: %s  RSSI: %d dBm\n",
+  // Reduce radio TX power to shrink the current spikes that stack on top of the
+  // camera's capture spikes (a cause of frame corruption on power-marginal boards).
+  // Safe here — signal is strong. Raise if the link ever drops.
+  WiFi.setTxPower(WIFI_POWER_8_5dBm);
+
+  Serial.printf("\n[wifi] connected, IP: %s  RSSI: %d dBm  (TX power reduced)\n",
                 WiFi.localIP().toString().c_str(), WiFi.RSSI());
 }
 

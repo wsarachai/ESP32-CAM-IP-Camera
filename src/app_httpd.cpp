@@ -131,8 +131,28 @@ static esp_err_t index_handler(httpd_req_t *req) {
   return httpd_resp_send(req, INDEX_HTML, strlen(INDEX_HTML));
 }
 
+// A structurally valid JPEG starts with SOI (FF D8) and ends with EOI (FF D9).
+// Truncated/byte-dropped frames fail this — cheap way to reject obvious garbage.
+static bool looks_like_jpeg(camera_fb_t *fb) {
+  return fb && fb->format == PIXFORMAT_JPEG && fb->len > 100 &&
+         fb->buf[0] == 0xFF && fb->buf[1] == 0xD8 &&
+         fb->buf[fb->len - 2] == 0xFF && fb->buf[fb->len - 1] == 0xD9;
+}
+
+// Grab a frame that passes the JPEG sanity check, retrying a few times.
+// Favors returning a clean still over returning quickly (AI use-case).
+static camera_fb_t *grab_validated_frame(int max_tries) {
+  camera_fb_t *fb = NULL;
+  for (int i = 0; i < max_tries; i++) {
+    fb = esp_camera_fb_get();
+    if (looks_like_jpeg(fb)) return fb;
+    if (fb) esp_camera_fb_return(fb);  // drop bad frame, try again
+  }
+  return esp_camera_fb_get();  // last resort: whatever we can get
+}
+
 static esp_err_t capture_handler(httpd_req_t *req) {
-  camera_fb_t *fb = esp_camera_fb_get();
+  camera_fb_t *fb = grab_validated_frame(5);
   if (!fb) {
     httpd_resp_send_500(req);
     return ESP_FAIL;
@@ -165,6 +185,12 @@ static esp_err_t stream_handler(httpd_req_t *req) {
   while (true) {
     camera_fb_t *fb = esp_camera_fb_get();
     if (!fb) { res = ESP_FAIL; break; }
+
+    // Drop obviously corrupt (truncated) frames so the live view doesn't flash garbage.
+    if (fb->format == PIXFORMAT_JPEG && !looks_like_jpeg(fb)) {
+      esp_camera_fb_return(fb);
+      continue;
+    }
 
     uint8_t *jpg = fb->buf; size_t jpg_len = fb->len; bool converted = false;
     if (fb->format != PIXFORMAT_JPEG) {

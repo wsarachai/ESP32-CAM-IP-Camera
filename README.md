@@ -12,7 +12,7 @@ viewable in any browser.
 | Consumption | Browser MJPEG stream + web control UI |
 | Base code | Stock `CameraWebServer`, **face detection stripped out** |
 | Scope | Live viewer + snapshot + dimmable flash LED (no SD, no motion) |
-| Camera default | SVGA 800×600, JPEG quality 12, `fb_count=2`, `GRAB_LATEST` |
+| Camera default | UXGA 1600×1200, JPEG quality 12, 10 MHz XCLK, `GRAB_WHEN_EMPTY` (tuned for clean AI frames over FPS; needs solid 5V power) |
 | WiFi | Hardcoded in git-ignored `include/secrets.h` |
 | Addressing | Static IP in firmware + mDNS (`esp32cam.local`) |
 | Partition | `min_spiffs.csv` (dual ~1.9 MB app slots, OTA-capable) |
