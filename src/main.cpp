@@ -8,6 +8,7 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <ArduinoOTA.h>
+#include <HTTPClient.h>
 
 #include "secrets.h"
 #include "camera_pins.h"
@@ -15,6 +16,8 @@
 // Defined in app_httpd.cpp — starts the control server (port 80) and stream
 // server (port 81).
 void startCameraServer();
+// Defined in app_httpd.cpp — grab a validated (complete) JPEG frame.
+camera_fb_t *grab_validated_frame(int max_tries);
 
 static void initCamera() {
   camera_config_t config;
@@ -125,6 +128,27 @@ static void setupOTA() {
   Serial.println("[ota] ready for wireless updates");
 }
 
+#if PUSH_ENABLED
+// Capture one validated JPEG and POST it (raw body, image/jpeg) to PUSH_URL.
+static void pushSnapshot() {
+  camera_fb_t *fb = grab_validated_frame(5);
+  if (!fb) { Serial.println("[push] capture failed — skipping"); return; }
+
+  WiFiClient client;
+  HTTPClient http;
+  if (http.begin(client, PUSH_URL)) {
+    http.addHeader("Content-Type", "image/jpeg");
+    int code = http.POST(fb->buf, fb->len);
+    if (code > 0) Serial.printf("[push] POST %s -> %d (%u bytes)\n", PUSH_URL, code, fb->len);
+    else          Serial.printf("[push] POST failed: %s\n", http.errorToString(code).c_str());
+    http.end();
+  } else {
+    Serial.println("[push] http.begin() failed (bad URL?)");
+  }
+  esp_camera_fb_return(fb);
+}
+#endif
+
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(false);
@@ -159,5 +183,16 @@ void loop() {
       WiFi.reconnect();
     }
   }
+
+#if PUSH_ENABLED
+  // Periodic snapshot push. Blocks the loop briefly (~capture+POST); the HTTP
+  // server tasks keep serving during it, so /capture and /stream stay live.
+  static uint32_t lastPush = 0;
+  if (WiFi.status() == WL_CONNECTED && millis() - lastPush >= PUSH_INTERVAL_MS) {
+    lastPush = millis();
+    pushSnapshot();
+  }
+#endif
+
   delay(10);
 }

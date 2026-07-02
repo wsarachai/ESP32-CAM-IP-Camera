@@ -141,7 +141,8 @@ static bool looks_like_jpeg(camera_fb_t *fb) {
 
 // Grab a frame that passes the JPEG sanity check, retrying a few times.
 // Favors returning a clean still over returning quickly (AI use-case).
-static camera_fb_t *grab_validated_frame(int max_tries) {
+// Non-static: also used by the periodic snapshot push in main.cpp.
+camera_fb_t *grab_validated_frame(int max_tries) {
   camera_fb_t *fb = NULL;
   for (int i = 0; i < max_tries; i++) {
     fb = esp_camera_fb_get();
