@@ -13,6 +13,11 @@
 #include "secrets.h"
 #include "camera_pins.h"
 
+#if SD_SAVE_ENABLED
+#include "FS.h"
+#include "SD_MMC.h"
+#endif
+
 // Defined in app_httpd.cpp — starts the control server (port 80) and stream
 // server (port 81).
 void startCameraServer();
@@ -128,11 +133,92 @@ static void setupOTA() {
   Serial.println("[ota] ready for wireless updates");
 }
 
+#if SD_SAVE_ENABLED
+// Rolling storage on the microSD card. Files are named /<dir>/<8-digit>.jpg
+// (FAT 8.3-safe). We track the newest index to write and the oldest index to
+// delete; when free space runs low we delete from the oldest end. Sequential
+// names give a reliable "oldest" without an RTC (file timestamps are unreliable).
+static bool     g_sdReady   = false;
+static uint32_t g_nextIdx   = 1;  // next filename index to write
+static uint32_t g_oldestIdx = 1;  // oldest surviving filename index
+
+static void initSD() {
+  // 1-bit mode: uses GPIO2/14/15 only, leaving GPIO4 free for the flash LED.
+  if (!SD_MMC.begin("/sdcard", true)) {
+    Serial.println("[sd] mount failed — SD saving disabled");
+    return;
+  }
+  if (SD_MMC.cardType() == CARD_NONE) {
+    Serial.println("[sd] no card present — SD saving disabled");
+    return;
+  }
+  if (!SD_MMC.exists(SD_DIR)) SD_MMC.mkdir(SD_DIR);
+
+  // Resume the rolling range by scanning existing files for min/max index.
+  bool any = false;
+  File root = SD_MMC.open(SD_DIR);
+  if (root && root.isDirectory()) {
+    for (File f = root.openNextFile(); f; f = root.openNextFile()) {
+      if (f.isDirectory()) continue;
+      String n = String(f.name());
+      int slash = n.lastIndexOf('/');
+      if (slash >= 0) n = n.substring(slash + 1);
+      uint32_t idx = (uint32_t)strtoul(n.c_str(), NULL, 10);
+      if (idx == 0) continue;
+      if (idx + 1 > g_nextIdx) g_nextIdx = idx + 1;
+      if (!any || idx < g_oldestIdx) g_oldestIdx = idx;
+      any = true;
+    }
+  }
+  if (!any) { g_nextIdx = 1; g_oldestIdx = 1; }
+
+  g_sdReady = true;
+  Serial.printf("[sd] ready: %llu MB total, %llu MB used, resuming at #%u (oldest #%u)\n",
+                SD_MMC.totalBytes() / (1024ULL * 1024), SD_MMC.usedBytes() / (1024ULL * 1024),
+                g_nextIdx, g_oldestIdx);
+}
+
+// Delete oldest files until at least SD_MIN_FREE_KB is free (or nothing's left).
+static void sdEnsureFreeSpace() {
+  while (g_sdReady && g_oldestIdx < g_nextIdx) {
+    uint64_t freeKB = (SD_MMC.totalBytes() - SD_MMC.usedBytes()) / 1024ULL;
+    if (freeKB >= (uint64_t)SD_MIN_FREE_KB) return;
+    // Advance to the next existing oldest file and remove it.
+    bool removed = false;
+    while (g_oldestIdx < g_nextIdx) {
+      char p[48];
+      snprintf(p, sizeof(p), "%s/%08u.jpg", SD_DIR, g_oldestIdx);
+      g_oldestIdx++;
+      if (SD_MMC.exists(p)) { SD_MMC.remove(p); removed = true; Serial.printf("[sd] rolled off %s\n", p); break; }
+    }
+    if (!removed) return;  // nothing found to delete
+  }
+}
+
+static void saveToSD(const uint8_t *buf, size_t len) {
+  if (!g_sdReady) return;
+  sdEnsureFreeSpace();
+  char p[48];
+  snprintf(p, sizeof(p), "%s/%08u.jpg", SD_DIR, g_nextIdx);
+  File f = SD_MMC.open(p, FILE_WRITE);
+  if (!f) { Serial.printf("[sd] open %s failed\n", p); return; }
+  size_t w = f.write(buf, len);
+  f.close();
+  if (w == len) { Serial.printf("[sd] saved %s (%u B)\n", p, (unsigned)w); g_nextIdx++; }
+  else          Serial.printf("[sd] short write %s (%u/%u)\n", p, (unsigned)w, (unsigned)len);
+}
+#endif  // SD_SAVE_ENABLED
+
 #if PUSH_ENABLED
-// Capture one validated JPEG and POST it (raw body, image/jpeg) to PUSH_URL.
+// Capture one validated JPEG, save it to SD (rolling), and POST it (raw body,
+// image/jpeg) to PUSH_URL.
 static void pushSnapshot() {
   camera_fb_t *fb = grab_validated_frame(5);
   if (!fb) { Serial.println("[push] capture failed — skipping"); return; }
+
+#if SD_SAVE_ENABLED
+  saveToSD(fb->buf, fb->len);
+#endif
 
   WiFiClient client;
   HTTPClient http;
@@ -155,6 +241,9 @@ void setup() {
   Serial.println("\n\n=== ESP32-CAM IP Camera (v1) ===");
 
   initCamera();
+#if SD_SAVE_ENABLED
+  initSD();
+#endif
   connectWiFi();
 
   if (MDNS.begin(MDNS_HOSTNAME)) {

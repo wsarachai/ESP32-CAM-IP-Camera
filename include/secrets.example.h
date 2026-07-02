@@ -32,3 +32,10 @@
 #define PUSH_ENABLED     0
 #define PUSH_URL         "http://192.168.1.20:3000/ingest"
 #define PUSH_INTERVAL_MS 10000
+
+// --- Rolling SD-card save --- also write each pushed frame to the microSD card,
+// deleting the oldest files when free space drops below SD_MIN_FREE_KB so the
+// card never fills. Uses 1-bit SD mode (keeps GPIO4 free for the flash LED).
+#define SD_SAVE_ENABLED  0
+#define SD_DIR           "/frames"
+#define SD_MIN_FREE_KB   51200        // keep at least 50 MB free
