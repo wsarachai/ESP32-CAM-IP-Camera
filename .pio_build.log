@@ -1,0 +1,171 @@
+********************************************************************************
+If you like PlatformIO, please:
+- star it on GitHub > https://github.com/platformio/platformio-core
+- follow us on LinkedIn to stay up-to-date on the latest project news > https://www.linkedin.com/company/platformio/
+- try PlatformIO IDE for embedded development > https://platformio.org/platformio-ide
+********************************************************************************
+
+Processing esp32cam (platform: espressif32; board: esp32cam; framework: arduino)
+--------------------------------------------------------------------------------
+Platform Manager: Installing espressif32
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Platform Manager: espressif32@7.0.1 has been installed!
+Tool Manager: Installing espressif/toolchain-xtensa-esp32 @ 8.4.0+2021r2-patch5
+Tool Manager: Error: Please read https://bit.ly/package-manager-ioerror
+Tool Manager: Warning! Package Mirror: HTTPSConnectionPool(host='sin1.contabostorage.com', port=443): Max retries exceeded with url: /fd833e6c4db04192b0ad7e561907b935:pioregmirrorsg/tools/27/0f/b2b64783933fe486b269488257a1b717ec091ce3a30e63e0823f87fa1c67/toolchain-xtensa-esp32-windows_amd64-8.4.0+2021r2-patch5.tar.gz (Caused by ConnectTimeoutError(<HTTPSConnection(host='sin1.contabostorage.com', port=443) at 0x19cd4c32c10>, 'Connection to sin1.contabostorage.com timed out. (connect timeout=10)'))
+Tool Manager: Looking for another mirror...
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: toolchain-xtensa-esp32@8.4.0+2021r2-patch5 has been installed!
+Tool Manager: Installing platformio/framework-arduinoespressif32 @ ~3.20017.0
+Tool Manager: Error: Please read https://bit.ly/package-manager-ioerror
+Tool Manager: Warning! Package Mirror: HTTPSConnectionPool(host='sin1.contabostorage.com', port=443): Max retries exceeded with url: /fd833e6c4db04192b0ad7e561907b935:pioregmirrorsg/tools/7d/27/65c8307ca9af8e7f653da8375459ebf0566a70a79e8dc3fe8134897ba296/framework-arduinoespressif32-3.20017.241212+sha.dcc1105b.tar.gz (Caused by ConnectTimeoutError(<HTTPSConnection(host='sin1.contabostorage.com', port=443) at 0x19cd4c334d0>, 'Connection to sin1.contabostorage.com timed out. (connect timeout=10)'))
+Tool Manager: Looking for another mirror...
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: framework-arduinoespressif32@3.20017.241212+sha.dcc1105b has been installed!
+Tool Manager: Installing platformio/tool-esptoolpy @ ~2.41100.0
+Tool Manager: Error: Please read https://bit.ly/package-manager-ioerror
+Tool Manager: Warning! Package Mirror: HTTPSConnectionPool(host='sin1.contabostorage.com', port=443): Max retries exceeded with url: /fd833e6c4db04192b0ad7e561907b935:pioregmirrorsg/tools/41/6e/902b89be540081ec73998d0e236e80c342b64edd2cfef5797e6ce9660587/tool-esptoolpy-2.41100.0.tar.gz (Caused by ConnectTimeoutError(<HTTPSConnection(host='sin1.contabostorage.com', port=443) at 0x19cd4c32e90>, 'Connection to sin1.contabostorage.com timed out. (connect timeout=10)'))
+Tool Manager: Looking for another mirror...
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Collecting cryptography~=45.0.3
+  Downloading cryptography-45.0.7-cp311-abi3-win_amd64.whl.metadata (5.7 kB)
+Collecting ecdsa~=0.19.1
+  Downloading ecdsa-0.19.2-py2.py3-none-any.whl.metadata (29 kB)
+Collecting bitstring~=4.3.1
+  Downloading bitstring-4.3.1-py3-none-any.whl.metadata (5.3 kB)
+Collecting reedsolo~=1.7.0
+  Downloading reedsolo-1.7.0-py3-none-any.whl.metadata (23 kB)
+Collecting intelhex~=2.3.0
+  Downloading intelhex-2.3.0-py2.py3-none-any.whl.metadata (2.7 kB)
+Collecting cffi>=1.14 (from cryptography~=45.0.3)
+  Using cached cffi-2.0.0-cp313-cp313-win_amd64.whl.metadata (2.6 kB)
+Collecting six>=1.9.0 (from ecdsa~=0.19.1)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting bitarray<4.0,>=3.0.0 (from bitstring~=4.3.1)
+  Downloading bitarray-3.8.2-cp313-cp313-win_amd64.whl.metadata (35 kB)
+Collecting pycparser (from cffi>=1.14->cryptography~=45.0.3)
+  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
+Downloading cryptography-45.0.7-cp311-abi3-win_amd64.whl (3.4 MB)
+   ---------------------------------------- 3.4/3.4 MB 11.5 MB/s  0:00:00
+Downloading ecdsa-0.19.2-py2.py3-none-any.whl (150 kB)
+Downloading bitstring-4.3.1-py3-none-any.whl (71 kB)
+Downloading reedsolo-1.7.0-py3-none-any.whl (32 kB)
+Downloading intelhex-2.3.0-py2.py3-none-any.whl (50 kB)
+Downloading bitarray-3.8.2-cp313-cp313-win_amd64.whl (150 kB)
+Using cached cffi-2.0.0-cp313-cp313-win_amd64.whl (183 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading pycparser-3.0-py3-none-any.whl (48 kB)
+Installing collected packages: reedsolo, intelhex, bitarray, six, pycparser, bitstring, ecdsa, cffi, cryptography
+
+Successfully installed bitarray-3.8.2 bitstring-4.3.1 cffi-2.0.0 cryptography-45.0.7 ecdsa-0.19.2 intelhex-2.3.0 pycparser-3.0 reedsolo-1.7.0 six-1.17.0
+Tool Manager: tool-esptoolpy@2.41100.0 has been installed!
+Tool Manager: Installing platformio/tool-scons @ ~4.40801.0
+Tool Manager: Error: Please read https://bit.ly/package-manager-ioerror
+Tool Manager: Warning! Package Mirror: HTTPSConnectionPool(host='sin1.contabostorage.com', port=443): Max retries exceeded with url: /fd833e6c4db04192b0ad7e561907b935:pioregmirrorsg/tools/7d/42/b0fefe6c6223b85c3e0375d07c400e0548dfbbfa2445860fcc475f37c909/tool-scons-4.40801.0.tar.gz (Caused by ConnectTimeoutError(<HTTPSConnection(host='sin1.contabostorage.com', port=443) at 0x19cd4c33750>, 'Connection to sin1.contabostorage.com timed out. (connect timeout=10)'))
+Tool Manager: Looking for another mirror...
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Tool Manager: tool-scons@4.40801.0 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32cam.html
+PLATFORM: Espressif 32 (7.0.1) > AI Thinker ESP32-CAM
+HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.41100.0 (4.11.0) 
+ - toolchain-xtensa-esp32 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 33 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- ESPmDNS @ 2.0.0
+|-- WiFi @ 2.0.0
+Building in release mode
+Compiling .pio\build\esp32cam\src\app_httpd.cpp.o
+Compiling .pio\build\esp32cam\src\main.cpp.o
+Building .pio\build\esp32cam\bootloader.bin
+Generating partitions .pio\build\esp32cam\partitions.bin
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFi.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiAP.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiClient.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiGeneric.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiMulti.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiSTA.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiScan.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiServer.cpp.o
+Compiling .pio\build\esp32cam\lib75a\WiFi\WiFiUdp.cpp.o
+Compiling .pio\build\esp32cam\libad9\ESPmDNS\ESPmDNS.cpp.o
+esptool.py v4.11.0
+Creating esp32 image...
+Merged 1 ELF section
+Successfully created esp32 image.
+Compiling .pio\build\esp32cam\FrameworkArduino\Esp.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\FirmwareMSC.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\FunctionalInterrupt.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\HWCDC.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\HardwareSerial.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\IPAddress.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\IPv6Address.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\MD5Builder.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\Print.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\Stream.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\StreamString.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\Tone.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\USB.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\USBCDC.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\USBMSC.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\WMath.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\WString.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\base64.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\cbuf.cpp.o
+Archiving .pio\build\esp32cam\libad9\libESPmDNS.a
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-adc.c.o
+Archiving .pio\build\esp32cam\lib75a\libWiFi.a
+Indexing .pio\build\esp32cam\libad9\libESPmDNS.a
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-bt.c.o
+Indexing .pio\build\esp32cam\lib75a\libWiFi.a
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-cpu.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-dac.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-gpio.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-i2c-slave.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-i2c.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-ledc.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-matrix.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-misc.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-psram.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-rgb-led.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-rmt.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-sigmadelta.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-spi.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-time.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-timer.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-tinyusb.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-touch.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\esp32-hal-uart.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\firmware_msc_fat.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\libb64\cdecode.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\libb64\cencode.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\main.cpp.o
+Compiling .pio\build\esp32cam\FrameworkArduino\stdlib_noniso.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\wiring_pulse.c.o
+Compiling .pio\build\esp32cam\FrameworkArduino\wiring_shift.c.o
+Archiving .pio\build\esp32cam\libFrameworkArduino.a
+Indexing .pio\build\esp32cam\libFrameworkArduino.a
+Linking .pio\build\esp32cam\firmware.elf
+Retrieving maximum program size .pio\build\esp32cam\firmware.elf
+Checking size .pio\build\esp32cam\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [==        ]  17.7% (used 57964 bytes from 327680 bytes)
+Flash: [===       ]  28.2% (used 886537 bytes from 3145728 bytes)
+Building .pio\build\esp32cam\firmware.bin
+esptool.py v4.11.0
+Creating esp32 image...
+Merged 27 ELF sections
+Successfully created esp32 image.
+======================== [SUCCESS] Took 232.61 seconds ========================
