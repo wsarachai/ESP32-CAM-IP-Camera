@@ -14,11 +14,15 @@
 // --- Static IP ---
 // Pick an address OUTSIDE your router's DHCP pool so nothing else grabs it.
 // Example for a 192.168.1.0/24 network whose router is 192.168.1.1:
-#define STATIC_IP      192, 168, 1, 50
-#define GATEWAY_IP     192, 168, 1, 1
-#define SUBNET_MASK    255, 255, 255, 0
-#define PRIMARY_DNS    192, 168, 1, 1
-#define SECONDARY_DNS  8, 8, 8, 8
+#define STATIC_IP 192, 168, 1, 50
+#define GATEWAY_IP 192, 168, 1, 1
+#define SUBNET_MASK 255, 255, 255, 0
+#define PRIMARY_DNS 192, 168, 1, 1
+#define SECONDARY_DNS 8, 8, 8, 8
 
 // --- mDNS hostname --- reachable as http://<hostname>.local/ on supporting OSes.
 #define MDNS_HOSTNAME "esp32cam"
+
+// --- OTA --- password required to push firmware over WiFi.
+// MUST match `upload_flags = --auth=...` for the esp32cam_ota env in platformio.ini.
+#define OTA_PASSWORD "change-me-ota-pass"

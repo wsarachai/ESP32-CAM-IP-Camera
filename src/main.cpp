@@ -7,6 +7,7 @@
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <ESPmDNS.h>
+#include <ArduinoOTA.h>
 
 #include "secrets.h"
 #include "camera_pins.h"
@@ -103,6 +104,19 @@ static void connectWiFi() {
                 WiFi.localIP().toString().c_str(), WiFi.RSSI());
 }
 
+static void setupOTA() {
+  ArduinoOTA.setHostname(MDNS_HOSTNAME);
+  ArduinoOTA.setPassword(OTA_PASSWORD);
+  ArduinoOTA.onStart([]() { Serial.println("\n[ota] update starting"); });
+  ArduinoOTA.onEnd([]()   { Serial.println("\n[ota] done — rebooting"); });
+  ArduinoOTA.onProgress([](unsigned int p, unsigned int t) {
+    Serial.printf("[ota] %u%%\r", (p * 100) / t);
+  });
+  ArduinoOTA.onError([](ota_error_t e) { Serial.printf("[ota] error %u\n", e); });
+  ArduinoOTA.begin();
+  Serial.println("[ota] ready for wireless updates");
+}
+
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(false);
@@ -118,18 +132,24 @@ void setup() {
     Serial.println("[mdns] failed to start (browse by IP instead)");
   }
 
+  setupOTA();
+
   startCameraServer();
   Serial.printf("[http] ready:  http://%s/    stream on :81\n",
                 WiFi.localIP().toString().c_str());
 }
 
 void loop() {
-  // All work happens in the HTTP server tasks. Keep an eye on the link and
-  // reconnect if WiFi drops (static IP is re-applied automatically on reconnect).
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("[wifi] link lost — reconnecting");
-    WiFi.reconnect();
-    delay(2000);
+  ArduinoOTA.handle();  // must be serviced often for wireless updates to work
+
+  // Throttled link check: reconnect if WiFi drops (static IP re-applies on reconnect).
+  static uint32_t lastCheck = 0;
+  if (millis() - lastCheck > 5000) {
+    lastCheck = millis();
+    if (WiFi.status() != WL_CONNECTED) {
+      Serial.println("[wifi] link lost — reconnecting");
+      WiFi.reconnect();
+    }
   }
-  delay(1000);
+  delay(10);
 }
