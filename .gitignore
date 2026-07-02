@@ -9,3 +9,6 @@
 
 # Secrets — real WiFi credentials & static IP live here. NEVER commit.
 include/secrets.h
+
+# Local VSCode workspace file
+workspaces.code-workspace
